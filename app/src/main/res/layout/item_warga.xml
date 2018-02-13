@@ -29,33 +29,49 @@
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            <CheckBox
-                android:id="@+id/cb_item_warga"
-                android:text="H"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content" />
-            <!--<RadioGroup-->
-                <!--android:id="@+id/rg_item_warga_kehadiran"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:gravity="center_vertical"-->
+            <!--<LinearLayout-->
                 <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent">-->
-                <!--<RadioButton-->
-                    <!--android:id="@+id/rb_hadir"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<CheckBox-->
+                    <!--android:id="@+id/cbH_item_warga"-->
                     <!--android:text="H"-->
-                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_width="80dp"-->
                     <!--android:layout_height="wrap_content" />-->
-                <!--<RadioButton-->
-                    <!--android:id="@+id/rb_ijin"-->
+                <!--<CheckBox-->
+                    <!--android:id="@+id/cbI_item_warga"-->
                     <!--android:text="I"-->
-                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_width="80dp"-->
                     <!--android:layout_height="wrap_content" />-->
-                <!--<RadioButton-->
-                    <!--android:id="@+id/rb_alpa"-->
+                <!--<CheckBox-->
+                    <!--android:id="@+id/cbA_item_warga"-->
                     <!--android:text="A"-->
-                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_width="80dp"-->
                     <!--android:layout_height="wrap_content" />-->
-            <!--</RadioGroup>-->
+            <!--</LinearLayout>-->
+
+
+            <RadioGroup
+                android:id="@+id/rg_item_warga_kehadiran"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <RadioButton
+                    android:id="@+id/rb_hadir"
+                    android:text="H"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/rb_ijin"
+                    android:text="I"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/rb_alpa"
+                    android:text="A"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RadioGroup>
         </LinearLayout>
     </LinearLayout>
 
