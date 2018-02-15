@@ -1,6 +1,7 @@
 package com.sandec.wakhyudi.presensirt8.activities;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,8 +28,9 @@ import retrofit2.Response;
 
 public class PresensiActivity extends AppCompatActivity {
 List<Warga>listPresensi = new ArrayList<>();
+List<String>listStatus = new ArrayList<>();
 RecyclerView rvPresensi;
-String[] namaWarga = {"Adi",
+public static String[] namaWarga = {"Adi",
         "Adib",
         "Ahmadun",
         "Andi",
@@ -51,9 +53,12 @@ String[] namaWarga = {"Adi",
         "Wakhyudi",
         "Yoyok",
         "Yudi",
-        "Yuli"};
+        "Yuli",
+        "Irwan"};
 Bundle b;
-int a;
+
+    Warga warga;
+PresensiAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,73 +67,59 @@ int a;
         rvPresensi = (RecyclerView)findViewById(R.id.rv_presensi);
         rvPresensi.setLayoutManager(new LinearLayoutManager(this));
 
+        //mendapatkan nilai bulan yang dipilih dari activity sebelumnya
         b = getIntent().getExtras();
 
+
+
+        //memasukan nama dan pilihan status ke dalam listPresensi
         for (int i = 0; i <namaWarga.length ; i++) {
-
-            Warga warga = new Warga(namaWarga[i],"kosong");
-            warga.setId(i);
-
+            warga = new Warga(namaWarga[i],"kosong","Hadir","Ijin","Alpa");
             listPresensi.add(warga);
-
         }
 
-        rvPresensi.setAdapter(new PresensiAdapter(this,listPresensi));
-
+        //memasukan list yang didapat ke dlam adapter
+        adapter = new PresensiAdapter(this,listPresensi);
+        rvPresensi.setAdapter(adapter);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        rvPresensi.getChildAt(0).findViewById(R.id.rg_item_warga_kehadiran).
-//    }
 
-//    public void getPresensi(View view) {
-//        final ProgressDialog pd = new ProgressDialog(this);
-//        pd.setMessage("load data ...");
-//        pd.show();
-//
-//        List<String>listStatusPresensi = new ArrayList<>();
-//        String[]absen;
-//        int jmlWarga = rvPresensi.getChildCount();
-//
-//
-//        for (int i = 0; i <jmlWarga ; i++) {
-//            RadioGroup rgWarga = rvPresensi.getChildAt(i).findViewById(R.id.rg_item_warga_kehadiran);
-//            int selectedRadioButtonId = rgWarga.getCheckedRadioButtonId();
-//
-//            RadioButton rbPresensi = rvPresensi.getChildAt(i).findViewById(selectedRadioButtonId);
-//            String statusPresensi = rbPresensi.getText().toString();
-//            listStatusPresensi.add(statusPresensi);
-//
-//
-//        }
-//
-//
-//       // Log.d("data", "onResponse: "+listStatusPresensi);
-//        ServiceClient service = ServiceGenerator.createService(ServiceClient.class);
-//        String bulan = b.getString("bulan");
-//        Call<ResponServer>sendData = service.sendPresensi("insert","2018",bulan,listStatusPresensi);
-//
-//
-//        sendData.enqueue(new Callback<ResponServer>() {
-//            @Override
-//            public void onResponse(Call<ResponServer> call, Response<ResponServer> response) {
-//                pd.dismiss();
-//                String hasil = response.body().getHasil();
-//                Log.d("data", "onResponse: "+hasil);
-//               // Toast.makeText(PresensiActivity.this, ""+hasil, Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponServer> call, Throwable t) {
-//                pd.dismiss();
-//                Log.d("data", "onResponse: "+t.getMessage());
-//               // Toast.makeText(PresensiActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        //Toast.makeText(this, ""+listStatusPresensi, Toast.LENGTH_SHORT).show();
-//
-//    }
+
+    public void getPresensi(View view) {
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("load data ...");
+        pd.show();
+
+        for (int i = 0; i <adapter.getItemCount() ; i++) {
+            String status = listPresensi.get(i).getFinalPresensi();
+             listStatus.add(i,status);
+        }
+
+        ServiceClient service = ServiceGenerator.createService(ServiceClient.class);
+        String bulan = b.getString("bulan");
+        Call<ResponServer>sendData = service.sendPresensi("insert","2018",bulan,listStatus);
+
+
+        sendData.enqueue(new Callback<ResponServer>() {
+            @Override
+            public void onResponse(Call<ResponServer> call, Response<ResponServer> response) {
+                pd.dismiss();
+                String hasil = response.body().getHasil();
+                Log.d("data", "onResponse: "+hasil);
+                listStatus.clear();
+               // Toast.makeText(PresensiActivity.this, ""+hasil, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResponServer> call, Throwable t) {
+                pd.dismiss();
+                Log.d("data", "onResponse: "+t.getMessage());
+                listStatus.clear();
+               // Toast.makeText(PresensiActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //Toast.makeText(this, ""+listStatusPresensi, Toast.LENGTH_SHORT).show();
+
+    }
 }
